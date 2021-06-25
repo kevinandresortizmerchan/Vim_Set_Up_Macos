@@ -1,6 +1,9 @@
 set number
+set rnu
+let g:mapleader = " "
 set mouse=a
-set nolist
+set nowrap
+set undofile
 set tabstop=4
 set clipboard=unnamed
 set sw=4
@@ -14,47 +17,49 @@ set showmatch
 set hlsearch
 set showcmd
 set smartcase
-set undolevels=1000
+set cursorline
+set colorcolumn=120
 set autoindent
-set hidden
-set cmdheight=2
-set updatetime=300
-set autowrite
 set splitbelow
 set splitright
-set laststatus=2
-set autoread
-filetype indent on
-filetype plugin indent on
-syntax on
+set noshowmode
+set encoding=utf-8
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'dracula/vim'
-Plug 'scrooloose/nerdtree'
+Plug 'mhartington/oceanic-next'
+Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+Plug 'xuyuanp/nerdtree-git-plugin'
 Plug 'neoclide/coc.nvim',{'branch':'release'}
+Plug 'mhinz/vim-signify'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'junegunn/gv.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
 call plug#end()
-syntax enable 
-colorscheme dracula
-let g:NERDTreeShowHidden = 1
+syntax on
+syntax enable
+colorscheme OceanicNext
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeIgnore = []
 let g:NERDTreeStatusline = ''
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 nnoremap <silent> <C-v> :NERDTreeToggle<CR>
-tnoremap <Esc> <C-\><C-n>
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if &buftype == 'terminal' | :startinsert | endif
+tnoremap <Esc> <C-\><C-t>
 function! OpenTerminal()
 	split term://zsh
 	resize 10
 endfunction
-nnoremap <C-n> :call OpenTerminal()<CR>
+nnoremap <C-t> :call OpenTerminal()<CR>
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
@@ -63,23 +68,65 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-nnoremap <C-t> :tabnew<cr>
-nnoremap <C-a> :tabnext<cr>
-nnoremap <C-r> :vsplit :tabnew<cr>
-nnoremap <C-B> :tabprevious<cr>
-nnoremap <C-c> :tabclose<cr>
-nnoremap <C-O> :tabonly<cr>
+nnoremap <leader>, :ls<CR>
+nnoremap <C-n> :new<cr>
+nnoremap <C-c> :bd<cr>
+nnoremap <C-f> :bn<cr>
+nnoremap <C-b> :bp<cr>
+nnoremap <leader>l :b#<cr>
+nnoremap <leader>bu :Buffers<CR>
+nnoremap <C-a> ggVG<cr>
+nnoremap <leader>1 :b1<cr>
+nnoremap <leader>2 :b2<cr>
+nnoremap <leader>3 :b3<cr>
+nnoremap <leader>4 :b4<cr>
+nnoremap <leader>v :vnew<cr>
+nnoremap <leader>h :snew<cr>
+nnoremap <leader>m :bm<cr>
+nnoremap <leader>bn :sbn<cr>
+nnoremap <leader>bp :sbp<cr>
+nnoremap <leader>s :w<cr>
 nnoremap <C-p> :FZF<CR>
 let g:fzf_action = {'ctrl-t': 'tab split','ctrl-s': 'split','ctrl-v': 'vsplit'}
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme='papercolor'
-let g:airline#extensions#tabline#show_tab_nr = 1
-let g:airline#extensions#tabline#tab_nr_type = 2
-let g:airline#extensions#tabline#tabs_label = 't'
-let g:airline#extensions#tabline#buffers_label = 'b'
-let g:airline#extensions#tabline#show_tabs = 1
-let g:airline_detect_modified=1
+let g:airline_theme='oceanicnext'
+let g:airline#extensions#tabline#fnamemod = ':t'
 inoremap <silent><expr><C-space> coc#refresh()<CR>
-xmap <leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format-selected)t
+let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#hunks#enabled=1
+let g:bufferline_echo = 0
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✹',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'✭',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
+
+let g:NERDTreeGitStatusUseNerdFonts = 1
+nnoremap <leader>dd :call vimspector#Launch()<CR>
+nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
+nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
+nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
+nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
+nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
+nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
+nnoremap <leader>dr :call vimspector#Reset()<CR>
+nnoremap <leader>dcb :call vimspector#CleanLineBreakpoint()<CR>
+nmap <leader>di <Plug>VimspectorStepInto
+nmap <leader>do <Plug>VimspectorStepOver
+nmap <leader>de <Plug>VimspectorStepOut
+nmap <leader>d, <Plug>VimspectorRestart
+nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+
+nmap <leader>rc <Plug>VimspectorRunToCursor
+nmap <leader>tb <Plug>VimspectorToggleBreakpoint
+nmap <leader>tcb <Plug>VimspectorToggleConditionalBreakpoint
+
+
